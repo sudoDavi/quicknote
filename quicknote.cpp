@@ -1,25 +1,29 @@
 #include "notesfile.hpp"
+#include "configparser.hpp"
+#include "constants.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstddef> // for std::size_t
 
-void processArg(const std::string &arg) {
-	NotesFile notes{ "test-notes" };
-	notes.add(arg);
-	notes.save();
-	std::cout << notes;
-}
 
 // Inquires what to do from the user manually
-void manualMode() {
-	std::cout << "ToDo\n";
-	std::exit(0);
+void manualMode(ConfigParser &config, NotesFile &file) {
+	std::cout << "ToDo manualMode()\n";
+	std::cout << config.currentFile() << '\n';
+	std::cout << file << '\n';
+}
+
+void processOption(const std::vector<std::string> &args, ConfigParser &config) {
+	std::cout << "ToDo processOption\n";
+	std::cout << config.currentFile() << '\n';
+	for (const auto &arg : args)
+		std::cout << arg << '\n';
 }
 
 // Process the user's request via the arguments
-void automaticMode(int argc, char* argv[]) {
+void automaticMode(int argc, char* argv[], ConfigParser &config, NotesFile &file) {
 	// Preallocate the array with the size we need
 	// it is argc - 1 because we don't care
 	// for the first string of argv
@@ -31,18 +35,28 @@ void automaticMode(int argc, char* argv[]) {
 	for (std::size_t index{ 1 }; index < static_cast<std::size_t>(argc); ++index)
 		usefulArgs[index - 1] = argv[index];
 
-	for (const std::string& arg : usefulArgs) {
-		processArg(arg);
-	}
+	//Check if the first argument is a option
+	if (usefulArgs[0][0] == '-')
+		processOption(usefulArgs, config);
+	else {
+		file.add(usefulArgs);
+		file.save();
+
+		std::cout << "Notes:\n";
+		std::cout << file << '\n';
+	}	
 }
 
 int main(int argc, char* argv[]) {
-	// If user didn't pass any arguments, use manual mode and exit
-	if (argc < 2)
-		manualMode();
+	ConfigParser config{};
+	NotesFile currentFile{ config.currentFile() };
 
+	// If user didn't pass any options, use manual mode and exit
+	if (argc < 2)
+		manualMode(config, currentFile);
+	else
 	// Otherwise, use the automatic mode
-	automaticMode(argc, argv);
+		automaticMode(argc, argv, config, currentFile);
 	
 	return 0;
 }
