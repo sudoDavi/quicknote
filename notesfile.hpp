@@ -10,6 +10,7 @@
 
 class NotesFile {
 private:
+	static constexpr auto version{ Constants::NoteFileVersion };
 	std::fstream m_dataFile;
 	std::vector<std::string> m_notes{};
 	std::string m_filename{};
@@ -18,7 +19,7 @@ private:
 	void create();
 	void resetFile();
 public:
-	NotesFile(const std::string &filename = Constants::defaultNoteFile);
+	NotesFile(const std::string &filename = Constants::DefaultNoteFile);
 	void add(const std::string &note);
 	void add(const std::vector<std::string> &note);
 	// NOT IMPLEMENTED

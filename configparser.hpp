@@ -13,7 +13,7 @@
 
 class ConfigParser {
 private:
-	static constexpr auto version{ "0.1" };
+	static constexpr auto version{ Constants::ConfigFileVersion };
 	std::fstream m_dataFile;
 	std::vector<std::string> m_notefiles{};
 	std::string m_filename{};
@@ -24,7 +24,7 @@ private:
 	void read();
 	void save();
 public:
-	ConfigParser(const std::string &filename = Constants::defaultConfigFile);
+	ConfigParser(const std::string &filename = Constants::DefaultConfigFile);
 	void addNoteFile(const std::string &notefile);
 	std::vector<std::string>& getNoteFiles();
 	const std::vector<std::string>& getNoteFiles() const;

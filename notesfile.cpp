@@ -22,6 +22,15 @@ void NotesFile::read() {
 	m_dataFile >> numberOfNotes;
 	m_notes.resize(std::stoul(numberOfNotes));
 
+	std::string fileVersion{};
+	m_dataFile >> fileVersion;
+	if (fileVersion != version) {
+		std::cout << "ERROR: NOTE FILE VERSION MISMATCH\n";
+		std::cout << "THIS IS TEMPORARY\n";
+		m_dataFile.close();
+		std::exit(1);
+	}
+
 	// Skip the first line
 	m_dataFile.ignore(32767, '\n');
 
@@ -43,7 +52,7 @@ void NotesFile::create() {
 
 	// Creates the default file
 	m_dataFile.open(m_filename, std::ios::out);
-	m_dataFile << "0\n";
+	save();
 	m_dataFile.close();
 	// Opens the created file in write and read mode
 	m_dataFile.open(m_filename);
@@ -52,7 +61,8 @@ void NotesFile::create() {
 void NotesFile::save() {
 	m_dataFile.seekp(0);
 	// Save the number of notes
-	m_dataFile << m_notes.size() << '\n';
+	m_dataFile << m_notes.size() 
+		<< ' ' << version << '\n';
 	// Insert the notes into the file
 	for (const auto note : m_notes)
 		m_dataFile << note << '\n';

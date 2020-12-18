@@ -57,7 +57,7 @@ void ConfigParser::createDefault() {
 	m_dataFile.open(m_filename, std::ios::out);
 
 	// Saves the file with default parameters
-	m_currentNoteFile = Constants::defaultNoteFile;
+	m_currentNoteFile = Constants::DefaultNoteFile;
 	m_notefiles.push_back(m_currentNoteFile);
 	save();
 
