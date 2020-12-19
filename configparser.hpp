@@ -24,12 +24,15 @@ private:
 	void read();
 	void save();
 public:
+	static constexpr auto DefaultNoteFile{ Constants::DefaultNoteFile };
 	ConfigParser(const std::string &filename = Constants::DefaultConfigFile);
 	void addNoteFile(const std::string &notefile);
+	void addNoteFile(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end);
 	std::vector<std::string>& getNoteFiles();
 	const std::vector<std::string>& getNoteFiles() const;
 	const std::string& currentFile() const;
 	void useNoteFile(const std::string &name);
+	void useNoteFile(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end);
 	
 	
 };

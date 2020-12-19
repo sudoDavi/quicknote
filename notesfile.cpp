@@ -20,6 +20,8 @@ void NotesFile::read() {
 	// Get information about the number of notes
 	std::string numberOfNotes{};
 	m_dataFile >> numberOfNotes;
+	// Erase the notes in memory
+	m_notes.clear();
 	m_notes.resize(std::stoul(numberOfNotes));
 
 	std::string fileVersion{};
@@ -43,8 +45,30 @@ void NotesFile::read() {
 }
 
 void NotesFile::open(const std::string &filename) {
-	std::cout << "TODO open()\n";
-	std::cout << filename << '\n';
+	m_filename = filename;
+	m_dataFile.close();
+	m_dataFile.open(m_filename);
+	if (m_dataFile.is_open())
+		read();
+	else
+		create();
+}
+
+void NotesFile::open(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end) {
+	std::string wholeFileName{};
+	for (auto currentIt{begin}; currentIt < end; ++currentIt)
+		wholeFileName.append(*currentIt + ' ');
+
+	// To remove the trailling space
+	wholeFileName.pop_back();
+
+	m_filename = wholeFileName;
+	m_dataFile.close();
+	m_dataFile.open(m_filename);
+	if (m_dataFile.is_open())
+		read();
+	else
+		create();
 }
 
 void NotesFile::create() {
@@ -76,6 +100,20 @@ void NotesFile::add(const std::vector<std::string> &note) {
 	std::string wholeNote{};
 	for (const auto &snippet : note)
 		wholeNote.append(snippet + ' ');
+
+	// To remove the trailling space
+	wholeNote.pop_back();
+
+	m_notes.push_back(wholeNote);
+}
+
+void NotesFile::add(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end) {
+	std::string wholeNote{};
+	for (auto currentIt{begin}; currentIt < end; ++currentIt)
+		wholeNote.append(*currentIt + ' ');
+
+	// To remove the trailling space
+	wholeNote.pop_back();
 
 	m_notes.push_back(wholeNote);
 }

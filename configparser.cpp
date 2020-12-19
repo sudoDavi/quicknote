@@ -81,9 +81,18 @@ void ConfigParser::save() {
 }
 
 // Adds a new notefile to the in memory config
-// Does not save the file
 void ConfigParser::addNoteFile(const std::string &notefile) {
 	m_notefiles.push_back(notefile);
+	save();
+}
+
+void ConfigParser::addNoteFile(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end) {
+	std::string wholeFileName{};
+	for (auto currentIt{begin}; currentIt < end; ++currentIt)
+		wholeFileName.append(*currentIt + ' ');
+
+	m_notefiles.push_back(wholeFileName);
+	save();
 }
 
 std::vector<std::string>& ConfigParser::getNoteFiles() {
@@ -100,4 +109,17 @@ const std::string& ConfigParser::currentFile() const {
 
 void ConfigParser::useNoteFile(const std::string &name) {
 	m_currentNoteFile = name;
+	save();
+}
+
+void ConfigParser::useNoteFile(const std::vector<std::string>::const_iterator &begin, const std::vector<std::string>::const_iterator &end) {
+	std::string wholeFileName{};
+	for (auto currentIt{begin}; currentIt < end; ++currentIt)
+		wholeFileName.append(*currentIt + ' ');
+
+	// To remove the tralling space
+	wholeFileName.pop_back();
+
+	m_currentNoteFile = wholeFileName;
+	save();
 }
